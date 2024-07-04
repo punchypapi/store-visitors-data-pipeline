@@ -10,34 +10,39 @@ class Sensor:
     take a mean a standard deviation of visitors
     """ ""
 
-    def __init__(self, mean_visitor: int, std_dev_visitor: int) -> None:
+    def __init__(
+        self,
+        proba_error_sensor: int,
+        sensor_mean_visitor: int,
+        sensor_std_dev_visitor: int,
+    ) -> None:
         """
         initialize sensor
         """
         self.id = uuid.uuid4().int
-        self.mean = mean_visitor
-        self.std_dev = std_dev_visitor
+        self.mean = sensor_mean_visitor
+        self.std_dev = sensor_std_dev_visitor
+        self.proba_error = proba_error_sensor
 
     def get_number_visitors(self, hour: str, day: int, month: int, year: int) -> int:
         """ "
-        Retrieve number of visitor for a specific date and hour
+        Retrieve number of visitor for a specific day and hour
         and for a given sensor
         business_hour : hour selected by the user in format "%h:%m"
-        return : number of visitor captured by the sensor for day business_day
+        return : number of visitor captured by the sensor for a specific day
         and hour business_hour
         """
         day = int(day)
         month = int(month)
         year = int(year)
-        np.random.seed(seed=42)
+        # np.random.seed(seed=42)
         business_date = date(year, month, day)
         business_day_of_the_week = business_date.weekday()
-        print(business_day_of_the_week)
 
         # multiplicator depending on a day
         proportion_visitors = [1, 1, 1.25, 1, 1.40, 1.5, 1]
-        visitors = proportion_visitors[business_day_of_the_week] * np.random.normal(
-            self.mean, self.std_dev
+        visitors = proportion_visitors[business_day_of_the_week] * abs(
+            np.random.normal(self.mean, self.std_dev)
         )
 
         if (
@@ -48,26 +53,46 @@ class Sensor:
         ):
             number_visitors = 0
         else:
-            if hour > "15:00" and hour < "19:00":
+            if hour >= "15:00" and hour < "19:00":
                 number_visitors = 1.25 * visitors
             else:
                 number_visitors = visitors
 
-        return number_visitors
+        return int(number_visitors)
+
+    def get_number_visitor_error(
+        self, hour: str, day: int, month: int, year: int
+    ) -> int:
+        """ "
+        Retrieve number of visitor for a specific date and hour
+        and for a given sensor while taking into account errors
+        business_hour : hour selected by the user in format "%h:%m"
+        return : number of visitor captured by the sensor for day business_day
+        and hour business_hour
+        """
+
+        visitors = self.get_number_visitors(hour, day, month, year)
+        if visitors > 0:
+            odd_error = int(self.proba_error * 100)
+            list_odd = [int(visitors / 5) for i in range(odd_error)] + [
+                visitors for i in range(100 - odd_error)
+            ]
+            visitors = np.random.choice(list_odd)
+        return visitors
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        business_day, business_month, business_year = [
-            d for d in sys.argv[1].split("-")
-        ]
-        business_hour = sys.argv[2]
-        test_sensor = Sensor(1200, 1000)
-        print(
-            test_sensor.get_number_visitors(
-                business_hour, business_day, business_month, business_year
-            )
-        )
 
-    else:
-        print("Please enter a date and a time")
+    hours_range = [f"0{i}:00" for i in range(10)] + [f"{i}:00" for i in range(11, 24)]
+    business_year = 2021
+    business_month = 3
+    for business_day in range(1, 29):
+        for business_hour in hours_range:
+            test_sensor = Sensor(0.2, 3000, 100)
+            print(
+                f"{business_day}-{business_month}-{business_year}",
+                business_hour,
+                test_sensor.get_number_visitor_error(
+                    business_hour, business_day, business_month, business_year
+                ),
+            )
