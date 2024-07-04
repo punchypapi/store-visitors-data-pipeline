@@ -74,7 +74,7 @@ class Sensor:
         visitors = self.get_number_visitors(hour, day, month, year)
         if visitors > 0:
             odd_error = int(self.proba_error * 100)
-            list_odd = [int(visitors / 5) for i in range(odd_error)] + [
+            list_odd = [int(visitors / 6) for i in range(odd_error)] + [
                 visitors for i in range(100 - odd_error)
             ]
             visitors = np.random.choice(list_odd)
