@@ -1,7 +1,7 @@
-import sys
-import numpy as np
-from datetime import date
 import uuid
+from datetime import date
+
+import numpy as np
 
 
 class Sensor:
@@ -12,7 +12,7 @@ class Sensor:
 
     def __init__(
         self,
-        proba_error_sensor: int,
+        proba_error_sensor: float,
         sensor_mean_visitor: int,
         sensor_std_dev_visitor: int,
     ) -> None:
