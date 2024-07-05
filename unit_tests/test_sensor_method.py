@@ -1,6 +1,7 @@
-from src.sensor import Sensor
 import unittest
 from datetime import date
+
+from src.sensor import Sensor
 
 
 class TestSensor(unittest.TestCase):
