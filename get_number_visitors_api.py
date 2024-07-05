@@ -19,8 +19,9 @@ def filter_sensor_dataframe(
     filter_hour: str,
 ) -> int:
     """
-    Retrieve number of visitor captured by the sensor
-    for a given datetime
+    Apply a datetime filters to
+    retrieve number of visitor captured by the sensor
+
     """
     filtered_df = df[
         (df.year == filter_year)
@@ -35,6 +36,11 @@ def filter_sensor_dataframe(
 def get_number_visitor(
     day: int, month: int, year: int, hour: str | None = None
 ) -> JSONResponse:
+    """
+    Retrieve number of visitor captured by the sensor
+    for a given datetime
+
+    """
     # return error if year < 2021
     if year < 2021 or year > 2024:
         return JSONResponse(status_code=404, content="Not data for the year inputed")
