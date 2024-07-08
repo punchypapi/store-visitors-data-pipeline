@@ -1,4 +1,5 @@
 import sys
+
 from tests import retrieve_visitor_api
 
 # //!\\ Warning : please make sure to run get_number_visitors_api.py to start the server before running this script
