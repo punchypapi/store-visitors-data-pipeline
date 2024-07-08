@@ -1,4 +1,3 @@
-import uuid
 from datetime import date
 
 import numpy as np
@@ -19,7 +18,6 @@ class Sensor:
         """
         initialize sensor
         """
-        self.id = uuid.uuid4().int
         self.mean = sensor_mean_visitor
         self.std_dev = sensor_std_dev_visitor
         self.proba_error = proba_error_sensor
@@ -83,7 +81,7 @@ class Sensor:
 
 if __name__ == "__main__":
 
-    hours_range = [f"0{i}:00" for i in range(10)] + [f"{i}:00" for i in range(11, 24)]
+    hours_range = [f"0{i}:00" for i in range(10)] + [f"{i}:00" for i in range(10, 24)]
     business_year = 2021
     business_month = 3
     for business_day in range(1, 29):
