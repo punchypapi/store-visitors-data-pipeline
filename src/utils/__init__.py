@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.sensor import Sensor
+from src.utils.sensor import Sensor
 
 
 def create_sensor_data() -> dict:

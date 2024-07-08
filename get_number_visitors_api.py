@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src import create_sensor_data
+from src.utils import create_sensor_data
 
 app = FastAPI()
 sensor_data = pd.DataFrame.from_dict(create_sensor_data())
@@ -57,7 +57,7 @@ def get_number_visitor(
             content="Enter a valid store, list of valid stores : Lille, Paris, Toulouse",
         )
     # check captor id selected
-    if not (selected_id < 9 and selected_year >= 1):
+    if not (selected_id < 9 and selected_id >= 1):
         return JSONResponse(
             status_code=404, content="Please select a sensor id between 1 and 8"
         )
