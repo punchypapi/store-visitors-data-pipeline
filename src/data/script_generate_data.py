@@ -5,7 +5,7 @@ from tests import retrieve_visitor_api
 
 # //!\\ Warning : please make sure to run get_number_visitors_api.py to start the server before running this script
 
-sensor_data = []
+sensor_data = [["store", "sensor", "date", "hour", "number_visitors"]]
 
 store_locations = ["Lille", "Paris", "Toulouse"]
 business_year = 2024
