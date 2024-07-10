@@ -1,4 +1,5 @@
 *.csv
 /venv
 .idea/
+*.parquet
 __pycache__

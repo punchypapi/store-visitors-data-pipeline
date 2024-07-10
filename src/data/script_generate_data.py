@@ -5,6 +5,10 @@ from tests.test_sensor_api import retrieve_visitor_api
 
 # //!\\ Warning : please make sure to run get_number_visitors_api.py to start the server before running this script
 
+"""
+This script generate hourly sensor data from 3 sensors for three different store
+starting from 01-01-2024 until the day the script is run 
+"""
 sensor_data = [["store", "sensor", "date", "hour", "number_visitors"]]
 
 store_locations = ["Lille", "Paris", "Toulouse"]
