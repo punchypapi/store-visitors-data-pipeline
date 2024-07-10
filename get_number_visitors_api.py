@@ -57,9 +57,9 @@ def get_number_visitor(
             content="Enter a valid store, list of valid stores : Lille, Paris, Toulouse",
         )
     # check captor id selected
-    if not (selected_id < 9 and selected_id >= 1):
+    if not (selected_id <= 3 and selected_id >= 1):
         return JSONResponse(
-            status_code=404, content="Please select a sensor id between 1 and 8"
+            status_code=404, content="Please select a sensor id between 1 and 3"
         )
     # return error if year selected is not available
     if selected_year < 2021 or selected_year > 2024:
@@ -103,4 +103,4 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
 
 
-# curl -v "http://0.0.0.0:8080/?selected_store=Lille&selected_id=1&selected_day=1&selected_month=1&selected_year=2022&selected_hour=12:00"
+# curl -v "http://0.0.0.0:8080/?selected_store=Lille&selected_id=3&selected_day=8&selected_month=5&selected_year=2024&selected_hour=10:00"
