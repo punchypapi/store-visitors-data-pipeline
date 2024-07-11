@@ -1,14 +1,13 @@
 import os
 
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 from pyspark.sql import Window as W
+from pyspark.sql import functions as F
 
-file_path = os.path.dirname(__file__)
-raw_sensor_data_path = os.path.join(file_path, "../../data/raw/sensor_data.csv")
-processed_sensor_data_path = os.path.join(
-    file_path, "../../data/processed/processed_sensor_data.parquet"
-)
+project_path = os.environ["PYTHONPATH"]
+raw_sensor_data_path = project_path + "/data/raw/sensor_data.csv"
+processed_sensor_data_path = project_path + "/data/processed"
+
 
 spark = SparkSession.builder.appName("TransformData").getOrCreate()
 # loading and reading data
@@ -45,7 +44,7 @@ sensor_data_df = sensor_data_df.withColumn(
 # add column pct_change to measure difference between number of visitors
 sensor_data_df = sensor_data_df.withColumn(
     "pct_change (%)",
-    (
+    F.when(F.col("daily_number_visitors") == 0, 0).otherwise(
         F.round(
             F.abs(
                 F.col("daily_number_visitors")
@@ -57,4 +56,21 @@ sensor_data_df = sensor_data_df.withColumn(
     ),
 )
 # export data in processed parquet format
-sensor_data_df.write.parquet(processed_sensor_data_path)
+try:
+    sensor_data_df.write.parquet(processed_sensor_data_path, mode="overwrite")
+    files = [
+        file
+        for file in os.listdir(processed_sensor_data_path)
+        if file.endswith(".parquet")
+    ]
+    os.rename(
+        processed_sensor_data_path + f"/{files[0]}",
+        processed_sensor_data_path + f"/sensor_data.parquet",
+    )
+
+except Exception as e:
+    print(f"An error has been encountered, logg : {e}")
+
+
+# Stop the Spark session
+spark.stop()

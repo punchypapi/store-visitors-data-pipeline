@@ -1,6 +1,9 @@
 *.csv
+*.parquet
+*.crc
+*.duckdb
+_SUCCESS
 /venv
 .idea/
-*.parquet
 __pycache__
 .DS_Store
