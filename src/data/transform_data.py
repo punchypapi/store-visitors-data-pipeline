@@ -56,7 +56,21 @@ sensor_data_df = sensor_data_df.withColumn(
     ),
 )
 # export data in processed parquet format
-sensor_data_df.write.parquet(processed_sensor_data_path, mode="overwrite")
+try:
+    sensor_data_df.write.parquet(processed_sensor_data_path, mode="overwrite")
+    files = [
+        file
+        for file in os.listdir(processed_sensor_data_path)
+        if file.endswith(".parquet")
+    ]
+    os.rename(
+        processed_sensor_data_path + f"/{files[0]}",
+        processed_sensor_data_path + f"/sensor_data.parquet",
+    )
+
+except Exception as e:
+    print(f"An error has been encountered, logg : {e}")
+
 
 # Stop the Spark session
 spark.stop()
