@@ -13,7 +13,7 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 * **Visualization:** Develop an interactive dashboard with Streamlit, including data quality checks.
 
 ## Project Structure
-
+```
 ├── README.md
 ├── .gitignore
 ├── requirements.txt
@@ -37,7 +37,7 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 │   ├── test_db.py
 │   ├── test_sensor_api.py
 │   └── test_sensor_method.py
-
+```
 
 
 
@@ -57,45 +57,40 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 
 ### Ticket 2: Set Up API
 
-* **Description:** Create a Flask app to expose the generated data through a GET API.
+* **Description:** Create a FastAPI app to expose the generated data through a GET API.
 * **File:** `get_number_visitors_api.py`
 
 ### Ticket 3: Retrieve Data from API
 
 * **Description:** Use a Python script to retrieve data from the API and save it to a CSV file.
-* **File:** `src/data/`
+* **File:** `src/data/script_generate_data.py`
 
 ### Ticket 4: Data Transformation with PySpark
 
 * **Description:** Clean and transform the data using PySpark, and save the transformed data in Parquet format.
-* **File:** `transformation/transform_pyspark.py`
+* **File:** `src/data/transform_data.py`
 
 ### Ticket 5: Load Data into DuckDB
 
 * **Description:** Load the Parquet file into DuckDB for efficient querying.
-* **File:** `transformation/load_duckdb.py`
+* **File:** `src/data/init_db.py`
 
-### Ticket 6: Data Quality Checks
-
-* **Description:** Implement data quality checks and visualize the data using a Streamlit dashboard.
-* **File:** `dashboard/data_quality_checks.py`
-
-### Ticket 7: Develop Streamlit Dashboard
+### Ticket 6: Develop Streamlit Dashboard for Data Quality Checks
 
 * **Description:** Create an interactive dashboard using Streamlit to visualize the data and perform quality checks.
-* **File:** `dashboard/app.py`
+* **File:** `src/app/app.py`
 
-### Ticket 8: Create Local DAG with Airflow (Optional)
+### Ticket 7: Create Local DAG with Airflow (Optional)
 
 * **Description:** Define and manage a local Directed Acyclic Graph (DAG) using Apache Airflow to orchestrate the data pipeline.
 * **File:** `airflow/dags/store_visitors_dag.py`
 
 ## Setup and Installation
 
-1. Clone the repository:
+1. Clone the repository using SSH key:
 
 ```bash
-git clone [https://github.com/yourusername/store-visitors-data-pipeline.git](https://github.com/yourusername/store-visitors-data-pipeline.git)
+git clone git@github.com:punchypapi/store-visitors-data-pipeline.git
 ```
 
 2. Navigate to the project directory:
@@ -104,7 +99,7 @@ git clone [https://github.com/yourusername/store-visitors-data-pipeline.git](htt
 cd store-visitors-data-pipeline
 ```
 
-3. Set up a virtual environment :
+3. Set up a virtual environment `venv`:
 
 ```bash
 python3 -m venv venv 
