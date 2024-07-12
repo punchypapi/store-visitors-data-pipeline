@@ -1,4 +1,5 @@
 import csv
+import os
 from datetime import datetime
 
 from tests.test_sensor_api import retrieve_visitor_api
@@ -9,6 +10,15 @@ from tests.test_sensor_api import retrieve_visitor_api
 This script generate hourly sensor data from 3 sensors for three different store
 starting from 01-01-2024 until the day the script is run 
 """
+
+# Initialize project path
+project_path = os.environ["PYTHONPATH"]
+
+# Create data folder in doesn't exist
+if "data" not in os.listdir(project_path):
+    os.makedirs("data/raw")
+
+
 sensor_data = [["store", "sensor", "date", "hour", "number_visitors"]]
 
 store_locations = ["Lille", "Paris", "Toulouse"]

@@ -104,3 +104,5 @@ if __name__ == "__main__":
 
 
 # curl -v "http://0.0.0.0:8080/?selected_store=Lille&selected_id=3&selected_day=8&selected_month=5&selected_year=2024&selected_hour=10:00"
+
+# curl -v "http://0.0.0.0:8080/?selected_id=3&selected_store=Lille&selected_day=8&selected_month=5&selected_year=2024&selected_hour=10:00"

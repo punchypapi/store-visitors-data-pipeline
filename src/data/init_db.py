@@ -2,7 +2,14 @@ import os
 
 import duckdb
 
+# Initialize project path
 project_path = os.environ["PYTHONPATH"]
+
+# Create data folder in doesn't exist
+if "database" not in os.listdir(project_path + "/data"):
+    os.mkdir(project_path + "/data/database")
+
+
 parquet_path = project_path + "/data/processed/sensor_data.parquet"
 duckdb_path = project_path + "/data/database/sensor_data.duckdb"
 

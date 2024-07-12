@@ -8,32 +8,6 @@ import streamlit as st
 # initialize project path
 project_path = os.environ["PYTHONPATH"]
 
-# Checking that data is loaded and transformed
-
-if "sensor_data.csv" not in os.listdir(project_path + "/data/raw"):
-
-    with open(project_path + "/get_number_visitors_api.py", "r") as f:
-        exec(f.read())
-    with open(project_path + "/src/data/script_generate_data.py", "r") as f:
-        exec(f.read())
-    with open(project_path + "/src/data/transform_data.py", "r") as f:
-        exec(f.read())
-    with open(project_path + "/src/data/init_db.py", "r") as f:
-        exec(f.read())
-
-
-if "sensor_data.parquet" not in os.listdir(project_path + "/data/processed"):
-
-    with open(project_path + "/src/data/transform_data.py", "r") as f:
-        exec(f.read())
-    with open(project_path + "/src/data/init_db.py", "r") as f:
-        exec(f.read())
-
-if "sensor_data.duckdb" not in os.listdir(project_path + "/data/database"):
-
-    with open(project_path + "/src/data/init_db.py", "r") as f:
-        exec(f.read())
-
 # Connecting to database
 con = duckdb.connect(
     project_path + "/data/database/sensor_data.duckdb", read_only=False
