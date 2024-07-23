@@ -5,11 +5,7 @@ from pyspark.sql import Window as W
 from pyspark.sql import functions as F
 
 # Initialize project path
-project_path = os.environ["PYTHONPATH"]
-
-# Create data folder in doesn't exist
-if "processed" not in os.listdir(project_path + "/data"):
-    os.mkdir(project_path + "/data/processed")
+project_path = "/opt/airflow"
 
 raw_sensor_data_path = project_path + "/data/raw/sensor_data.csv"
 processed_sensor_data_path = project_path + "/data/processed"

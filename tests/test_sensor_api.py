@@ -22,7 +22,7 @@ def retrieve_visitor_api(
         if business_hour == "":
             business_hour = "12:00"
 
-        url = f"http://0.0.0.0:8080/?selected_store={business_store}&selected_id={sensor_id}&selected_day={day}&selected_month={month}&selected_year={year}&selected_hour={business_hour}"
+        url = f"http://0.0.0.0:8000/?selected_store={business_store}&selected_id={sensor_id}&selected_day={day}&selected_month={month}&selected_year={year}&selected_hour={business_hour}"
         response = requests.get(url).text
         return response
 

@@ -1,17 +1,10 @@
-import os
-
 import duckdb
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-# initialize project path
-project_path = os.environ["PYTHONPATH"]
-
 # Connecting to database
-con = duckdb.connect(
-    project_path + "/data/database/sensor_data.duckdb", read_only=False
-)
+con = duckdb.connect("data/database/sensor_data.duckdb", read_only=False)
 
 # Retrieve table and convert it to DataFrame
 sensor_data_df = con.execute("SELECT * FROM sensor_data").df()
