@@ -1,0 +1,11 @@
+duckdb==1.0.0
+fastapi==0.111.1
+Flask_AppBuilder==4.4.1
+numpy==2.0.1
+pandas==2.2.2
+pendulum==3.0.0
+plotly==5.22.0
+pyspark==3.5.1
+Requests==2.32.3
+streamlit==1.36.0
+uvicorn==0.30.3
