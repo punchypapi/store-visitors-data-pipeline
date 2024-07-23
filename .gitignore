@@ -1,9 +1,10 @@
-*.csv
-*.parquet
-*.crc
-*.duckdb
-_SUCCESS
+/data
 /venv
 .idea/
-__pycache__
+__pycache__/
 .DS_Store
+.env
+data-automation-pipeline/config
+data-automation-pipeline/logs
+data-automation-pipeline/plugins
+

@@ -2,8 +2,7 @@
 
 ## Overview
 
-This project focuses on the end-to-end process of generating, retrieving, transforming, and visualizing store visitor data. The core objective is to simulate realistic visitor count data for multiple stores, expose this data through a GET API, and create a comprehensive dashboard for insights using Streamlit.
-
+This project focuses on the end-to-end process of generating, retrieving, transforming, and visualizing store visitor data. The core objective is to simulate realistic visitor count data for multiple stores, expose this data through a GET API, and create a comprehensive dashboard for insights using Streamlit. The pipeline automation is managed using Apache Airflow and all components run in Docker containers.
 ## Features
 
 * **Data Generation:** Simulate realistic visitor count data for multiple stores.
@@ -11,42 +10,44 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 * **Data Transformation:** Use PySpark for data transformation and save the results in parquet format.
 * **Database:** Load the parquet file into DuckDB.
 * **Visualization:** Develop an interactive dashboard with Streamlit, including data quality checks.
-
+* **Pipeline Automation:** Automate the entire data pipeline using Apache Airflow.
 ## Project Structure
 ```
 ├── README.md
 ├── .gitignore
-├── requirements.txt
 ├── .github
 │   ├── workflows
 │       ├── code_quality.yaml
 │       └── unit_tests.yaml
+├── data-automation-pipeline
+│   ├── dags
+│   │   ├── etl_data_dag.py
+│   │   └── scripts
+│   │       ├── init_db.py
+│   │       ├── script_generate_data.py
+│   │       └── transform_data.py
 ├── src
+│   ├── api
+│   │   └── get_number_visitors_api.py
 │   ├── app
 │   │   └── app.py
-│   ├── data
-│   │   ├── init_db.py
-│   │   ├── script_generate_data.py
-│   │   └── transform_data.py
 │   └── utils
 │       ├── __init__.py
 │       └── sensor.py
-├── get_number_visitors_api.py
 ├── tests
-│   ├── __init__.py
 │   ├── test_db.py
 │   ├── test_sensor_api.py
 │   └── test_sensor_method.py
+├── requirements.txt
+├── .dockerignore
+├── Dockerfile
+├── server-api.dockerfile
+├── app.dockerfile
+├── docker-compose.yaml
+
+
+
 ```
-
-
-
-* **src/utils/**: Scripts for simulating store visitor data.
-* **tests/test_sensor_method.py**: Unit tests for different methods used to generate data.
-* **get_number_visitors_api.py**: Scripts for creating API method GET.
-* **src/data/**: Scripts for retriving data from API and transforming the data using PySpark.
-* * **data/**: Different repositories where data is written and saved.
-* **src/app/app.py**: Streamlit app for data visualization and quality checks.
 
 ## Tickets and Workflow
 
@@ -58,34 +59,38 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 ### Ticket 2: Set Up API
 
 * **Description:** Create a FastAPI app to expose the generated data through a GET API.
-* **File:** `get_number_visitors_api.py`
+* **File:** `src/api/get_number_visitors_api.py`
 
 ### Ticket 3: Retrieve Data from API
 
-* **Description:** Use a Python script to retrieve data from the API and save it to a CSV file.
-* **File:** `src/data/script_generate_data.py`
+* **Description:** Use a Python script to retrieve data from the API and save it to a CSV file in subdirectory `data/raw`
+* **File:** `data-automation-pipeline/dags/sripts/script_generate_data.py`
 
 ### Ticket 4: Data Transformation with PySpark
 
-* **Description:** Clean and transform the data using PySpark, and save the transformed data in Parquet format.
-* **File:** `src/data/transform_data.py`
+* **Description:** Clean and transform the data using PySpark, and save the transformed data in Parquet format in subdirectory `data/processed`
+* **File:** `data-automation-pipeline/dags/sripts/transform_data.py`
 
 ### Ticket 5: Load Data into DuckDB
 
-* **Description:** Load the Parquet file into DuckDB for efficient querying.
-* **File:** `src/data/init_db.py`
+* **Description:** Load the Parquet file into DuckDB for efficient querying. The database in saved in subfolder in subdirectory `data/database`
+* **File:** `data-automation-pipeline/dags/sripts/init_db.py`
 
 ### Ticket 6: Develop Streamlit Dashboard for Data Quality Checks
 
 * **Description:** Create an interactive dashboard using Streamlit to visualize the data and perform quality checks.
 * **File:** `src/app/app.py`
 
-### Ticket 7: Create Local DAG with Airflow (Optional)
+### Ticket 7: Create DAG with Airflow
 
-* **Description:** Define and manage a local Directed Acyclic Graph (DAG) using Apache Airflow to orchestrate the data pipeline.
-* **File:** `airflow/dags/store_visitors_dag.py`
+* **Description:** Define and manage a Directed Acyclic Graph (DAG) using Apache Airflow to orchestrate the data pipeline. The DAG automates the extraction, transformation, and loading (ETL) of data using Docker containers for execution.
+* **File:** `data-automation-pipeline/dags/etl_data_dag.py`
 
 ## Setup and Installation
+
+### Prerequisites
+
+Ensure you have Docker and Docker Compose installed on your machine.
 
 1. Clone the repository using SSH key:
 
@@ -98,78 +103,60 @@ git clone git@github.com:punchypapi/store-visitors-data-pipeline.git
 ```bash
 cd store-visitors-data-pipeline
 ```
-
-3. Set up a virtual environment `venv`:
-
-```bash
-python3 -m venv venv 
-```
-   
-4.Install the required dependencies:
+3. Create necessary directories for storing data:
 
 ```bash
-pip install -r requirements.txt
+mkdir -p data/raw data/processed data/database
 ```
+### Initializing Airflow Environment
 
-5.Set the `PYTHONPATH` environment variable:
+4. Create necessary directories:
 
 ```bash
-export PYTHONPATH=$(pwd)
+mkdir -p ./data-automation-pipeline/logs ./data-automation-pipeline/plugins ./data-automation-pipeline/config
 ```
+
+5. Create an `.env` file to store necessary environment variables :
+
+```bash
+echo -e "AIRFLOW_VERSION=2.9.3\nAIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
+```
+6. Build images and run containers :
+
+```bash
+docker-compose up --build
+```
+
+7. Track running containers :
+
+```bash
+docker-compose ps
+```
+
 
 ## Usage 
 
-### Data Generation
-
-1. Run the data generation script to simulate visitor data:
+1. Start the FastAPI server container (if not already running):
 
 ```bash
-python src/utils/__init__.py
+docker-compose up fastapi-server
 ```
+The API server will be available at http://localhost:8000
 
-2. Run the unit tests for `Sensor` class methods :
+2. Access the Airflow web server at http://localhost:8080 and trigger the DAG named `etl_data`. 
+This will automate the extraction of API data, transform it into Parquet format, and load it into DuckDB.
+
+
+3. Start the Streamlit app container (if not already running):
 
 ```bash
-python -m unittest tests/test_sensor_method.py
+docker-compose up streamlit-app
 ```
+The Streamlit dashboard will be available at http://localhost:8501
 
-### API
 
-1. Start the FastAPI API:
 
-```bash
-python get_number_visitors_api.py
-```
 
-2. Retrieve data from API and save it in a CSV file in `data/raw`:
-
-```bash
-python src/data/script_generate_data.py
-```
-
-**Note:** you can shutdown the FastAPI Server once the CSV file is created
-
-### Data Transformation and Loading 
-
-1. Transform the data using PySpark and save it in a Parquet file in `data/processed` :
-
-```bash
-python src/data/transform_data.py
-```
-
-2. Load the transformed data into DuckDB and create a Duckdb database in `data/database` :
-
-```bash
-python src/data/transform_data.py
-```
-
-### Visualization 
-
-Start the Streamlit dashboard :
-
-```bash
-streamlit run src/app/app.py
-```
    
 
 
