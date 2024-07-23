@@ -44,9 +44,6 @@ This project focuses on the end-to-end process of generating, retrieving, transf
 ├── server-api.dockerfile
 ├── app.dockerfile
 ├── docker-compose.yaml
-
-
-
 ```
 
 ## Tickets and Workflow
